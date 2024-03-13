@@ -155,6 +155,13 @@ Examples of the input that the text-to-image generative model receives:
 3. "a close-up painting in the style of [new prompt]"
 4. "a rendition in the style of [new prompt]"
 5. "a weird painting in the style of [new prompt]"
+
+Examples of successful [new prompt] (Feel free to refer to the examples below, but be **creative** in the prompts you generate):
+1. minimalist single line sketch, rough detail, charcoal and splatter and cyber graffiti color splash vinicunca style
+2. konstantin somov, jessica drossin, gaston bussière, naive childlike, 1970–present, digital illustration, dark cyan and yellow
+3. Watercolor painting, detailed, muted colors, soft, white background, clipart
+4. Black and white nature realistic line art style, lines for easy coloring, the original image was from a 12 mm lens, with an aperture of 9.0 to get sharp lines for easy coloring
+5. varied brushwork techniques, tangled nests, self-portraits, rough-edged 2d animation, loose brushwork, heavy lines, fantastic grotesque
 """
   return prompt
 
