@@ -1,4 +1,4 @@
-# Demo code for ECCV Submission \#8438 "Automated Black-box Prompt Engineering for Personalized Text-to-Image Generation"
+# Demo code for ICLR Submission "Automated Black-box Prompt Engineering for Personalized Text-to-Image Generation"
 
 To perform subject-drive personalized T2I generation (e.g. for DreamBooth objects), run
 ```
