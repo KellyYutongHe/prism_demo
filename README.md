@@ -7,7 +7,7 @@ This repository has the Python implementation of PRISM, an automatic prompt engi
 
 Our implementation is based on the <a href="https://github.com/patrickrchao/JailbreakingLLMs">PAIR</a> codebase.
 
-![Overview of PRISM](assets/intro.pdf)
+![Overview of PRISM](assets/intro-1.png)
 
 ## Installation
 ```
