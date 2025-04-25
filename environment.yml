@@ -1,4 +1,4 @@
-name: jb
+name: prism
 channels:
   - defaults
 dependencies:

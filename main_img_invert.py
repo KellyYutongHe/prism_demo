@@ -15,8 +15,11 @@ import torch
 
 def main(args):
     args.obj = args.obj.strip(".png")
+    args.dirname = args.goal_dir.split("/")[-2]
     args.output_dir = os.path.join(args.output_dir, f"n{args.n_streams}_k{args.n_iterations}")
     os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(os.path.join(args.output_dir, "prompts"), exist_ok=True)
+    os.makedirs(os.path.join(args.output_dir, "all_prompts"), exist_ok=True)
 
     img_path = os.path.join(args.goal_dir, f"{args.obj}.png")
     
@@ -78,12 +81,12 @@ def main(args):
 
     prompt_score_list = logger.finish()
     prompt_score_list = sorted(prompt_score_list, key=lambda x: x[1], reverse=True)
-    with open(os.path.join(args.output_dir, f"all_prompts_{args.obj}.txt"), "w") as f:
-        for (p,s,i) in prompt_score_list:
-            f.write(f"{p},{s},{i}\n")
+    with open(os.path.join(args.output_dir, "all_prompts", f"{args.dirname}_{args.obj}.txt"), "w") as f:
+        for (p,s,i,idx) in prompt_score_list:
+            f.write(f"{p},{s},{i},{idx}\n")
     
-    candidates = [p for (p,_,_) in prompt_score_list[:args.top_c]]
-    scores = torch.tensor([s for (_,s,_) in prompt_score_list[:args.top_c]]).float()
+    candidates = [p for (p,_,_,_) in prompt_score_list[:args.top_c]]
+    scores = torch.tensor([s for (_,s,_,_) in prompt_score_list[:args.top_c]]).float()
     for _ in range(args.num_reeval):
         target_response_list = targetLM.get_response(candidates)
         scores += torch.tensor(judgeLM.score([goal_img_string]*len(candidates),target_response_list))
@@ -99,7 +102,7 @@ def main(args):
         for c in max_indices:
             f.write(f"{candidates[c]},{scores[c]}\n")
     
-    with open(os.path.join(args.output_dir, f"{args.obj}.txt"), "w") as f:
+    with open(os.path.join(args.output_dir, "prompts", f"{args.dirname}_{args.obj}.txt"), "w") as f:
         f.write(best_prompt)
 
 
@@ -110,9 +113,9 @@ if __name__ == '__main__':
     ########### Assistant model parameters ##########
     parser.add_argument(
         "--attack-model",
-        default = "gpt-4-vision-preview",
+        default = "gpt-4o-mini",
         help = "Name of attacking model.",
-        choices=["gpt-4-vision-preview"]
+        choices=["gpt-4-vision-preview", "gpt-4o-mini"]
     )
     parser.add_argument(
         "--attack-max-n-tokens",
@@ -146,9 +149,9 @@ if __name__ == '__main__':
     ############ Judge model parameters ##########
     parser.add_argument(
         "--judge-model",
-        default="gpt-4-vision-preview",
+        default="gpt-4o-mini",
         help="Name of judge model.",
-        choices=["gpt-4-vision-preview","no-judge"]
+        choices=["gpt-4-vision-preview","no-judge","gpt-4o-mini"]
     )
     parser.add_argument(
         "--judge-max-n-tokens",
@@ -175,7 +178,7 @@ if __name__ == '__main__':
     parser.add_argument(
         "--keep-last-n",
         type = int,
-        default = 3,
+        default = 5,
         help = "Number of responses to save in conversation history of attack model. If this is too large, then it may exceed the context window of the model."
     )
     parser.add_argument(

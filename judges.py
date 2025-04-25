@@ -12,6 +12,8 @@ from common import *
 def load_judge(args):
     if args.judge_model == "gpt-4-vision-preview":
         return GPTVJudge(args)
+    elif args.judge_model == "gpt-4o-mini":
+        return GPTVJudge(args)
     elif args.judge_model == "no-judge":
         return NoJudge(args)
     else:

@@ -10,6 +10,7 @@ from conversers import load_attack_and_target_models
 from common import *
 import random
 import torch
+import time
 
 
 
@@ -41,6 +42,8 @@ def main(args):
 
     for conv in convs_list:
         conv.set_system_message(system_prompt)
+    
+    start_time = time.time()
     
     for iteration in range(1, args.n_iterations + 1):
         random.seed(iteration*10)
@@ -83,10 +86,10 @@ def main(args):
     prompt_score_list = logger.finish()
     prompt_score_list = sorted(prompt_score_list, key=lambda x: x[1], reverse=True)
     with open(os.path.join(args.output_dir, f"all_prompts/{args.obj}.txt"), "w") as f:
-        for (p,s,i) in prompt_score_list:
-            f.write(f"{p},{s},{i}\n")
+        for (p,s,i,idx) in prompt_score_list:
+            f.write(f"{p},{s},{i},{idx}\n")
     
-    candidates = [p for (p,_,_) in prompt_score_list[:args.top_c]]
+    candidates = [p for (p,_,_,_) in prompt_score_list[:args.top_c]]
     scores = torch.zeros(len(candidates)).float()
     for g_i in range(len(goal_imgs)):
         target_response_list = targetLM.get_response(candidates)
@@ -105,6 +108,8 @@ def main(args):
     
     with open(os.path.join(args.output_dir, f"{args.obj}.txt"), "w") as f:
         f.write(best_prompt)
+    
+    print("********* Time", time.time()-start_time)
 
 
 if __name__ == '__main__':
@@ -114,9 +119,9 @@ if __name__ == '__main__':
     ########### Attack model parameters ##########
     parser.add_argument(
         "--attack-model",
-        default = "gpt-4-vision-preview",
+        default = "gpt-4o-mini",
         help = "Name of attacking model.",
-        choices=["gpt-4-vision-preview"]
+        choices=["gpt-4-vision-preview", "gpt-4o-mini"]
     )
     parser.add_argument(
         "--attack-max-n-tokens",
@@ -150,9 +155,9 @@ if __name__ == '__main__':
     ############ Judge model parameters ##########
     parser.add_argument(
         "--judge-model",
-        default="gpt-4-vision-preview",
+        default="gpt-4o-mini",
         help="Name of judge model.",
-        choices=["gpt-4-vision-preview","no-judge"]
+        choices=["gpt-4-vision-preview","no-judge","gpt-4o-mini"]
     )
     parser.add_argument(
         "--judge-max-n-tokens",

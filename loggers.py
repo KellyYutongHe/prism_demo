@@ -39,7 +39,7 @@ class WandBLogger:
         df["conv_num"] = [i+1 for i in range(len(response_list))]
         self.table = pd.concat([self.table, df])
         current_best_score = self.table["judge_scores"].max()
-        self.prompt_score_list += [(attack_list[i]["prompt"], judge_scores[i], iteration) for i in range(len(attack_list))]
+        self.prompt_score_list += [(attack_list[i]["prompt"], judge_scores[i], iteration, i) for i in range(len(attack_list))]
         
         if current_best_score > self.best_score:
             self.best_score = current_best_score
@@ -53,7 +53,7 @@ class WandBLogger:
         self.logger.log({
             "iteration":iteration,
             "judge_scores":judge_scores,
-            "generated_images": [wandb.Image(image) for image in response_list],
+            # "generated_images": [wandb.Image(image) for image in response_list],
             "mean_judge_score_iter":sum(judge_scores)/len(judge_scores),
             "max_judge_score":self.table["judge_scores"].max(),
             "min_judge_score":self.table["judge_scores"].min(),

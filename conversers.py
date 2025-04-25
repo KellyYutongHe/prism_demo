@@ -1,5 +1,5 @@
 import common
-from language_models import GPT, Claude, PaLM, HuggingFace, DALLE, StableDiffusion, Llava
+from language_models import GPT, Claude, PaLM, HuggingFace, DALLE, StableDiffusion
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from config import VICUNA_PATH, LLAMA_PATH, ATTACK_TEMP, TARGET_TEMP, ATTACK_TOP_P, TARGET_TOP_P   
@@ -105,7 +105,11 @@ class AttackLM():
                 
                 if attack_dict is not None:
                     valid_outputs[orig_index] = attack_dict
-                    convs_list[orig_index].update_last_message(json_str)  # Update the conversation with valid generation
+                    # print(convs_list[orig_index])
+                    # print("*********")
+                    # convs_list[orig_index].update_last_message(json_str)  # Update the conversation with valid generation
+                    convs_list[orig_index].append_message("Assistant", json_str)
+                    # print(convs_list[orig_index])
                 else:
                     new_indices_to_regenerate.append(orig_index)
             
@@ -173,7 +177,7 @@ class TargetLM():
 
 def load_indiv_model(model_name, device=None):
     model_path, template = get_model_path_and_template(model_name)
-    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4-vision-preview"]:
+    if model_name in ["gpt-3.5-turbo", "gpt-4", "gpt-4-vision-preview", "gpt-4o-mini"]:
         lm = GPT(model_name)
     elif model_name in ["dall-e-2", "dall-e-3"]:
         lm = DALLE(model_name)
@@ -206,6 +210,10 @@ def get_model_path_and_template(model_name):
         "dall-e-3":{
             "path":"dall-e-3",
             "template":"dall-e-3"
+        },
+        "gpt-4o-mini":{
+            "path":"gpt-4o-mini",
+            "template":"gpt-4o-mini"
         },
         "gpt-4-vision-preview":{
             "path":"gpt-4-vision-preview",
