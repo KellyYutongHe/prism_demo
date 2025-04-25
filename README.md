@@ -3,7 +3,7 @@
 
 The official implementation of <a href="https://arxiv.org/abs/2403.19103">Automated Black-box Prompt Engineering for Personalized Text-to-Image Generation (PRISM)</a>. 
 
-This repository has python implementation of PRISM, an automatic prompt engineering method that is capable of creating human-interpretable and accurate prompts for the desired concept that are also transferable to both open-sourced and closed-sourced text-to-image models.
+This repository has the Python implementation of PRISM, an automatic prompt engineering method that is capable of creating human-interpretable and accurate prompts for the desired concept that are also applicable to both open-sourced and closed-sourced text-to-image models such as Dall-E and Midjourney.
 
 Our implementation is based on the <a href="https://github.com/patrickrchao/JailbreakingLLMs">PAIR</a> codebase.
 
