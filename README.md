@@ -1,7 +1,7 @@
 # Code for "Automated Black-box Prompt Engineering for Personalized Text-to-Image Generation"
 
 
-## Installations
+## Installation
 ```
 conda env create -f environment.yaml
 conda activate prism
